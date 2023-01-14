@@ -9,32 +9,22 @@ import utils.TimerLabel;
 
 public class SapperApplication extends JFrame {
 
-    private final int FIELD_SIZE = 9; // in blocks
+    private final int FIELD_SIZE = 9;
     private final int START_LOCATION = 200;
-    private final int MOUSE_BUTTON_LEFT = 1; // for mouse listener
+    private final int MOUSE_BUTTON_LEFT = 1;
     private final int MOUSE_BUTTON_RIGHT = 3;
     private final int NUMBER_OF_MINES = 10;
 
     private Cell[][] field = new Cell[FIELD_SIZE][FIELD_SIZE];
     private Random random = new Random();
     private int countOpenedCells;
-    private static boolean youWon, bangMine; // flags for win and bang/fail
-    private int bangX, bangY; // for fix the coordinates of the explosion
+    private static boolean youWon, bangMine;
 
     public SapperApplication() {
         setTitle("Игра \"Сапёр\"");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBounds(START_LOCATION, START_LOCATION, 330, 330);
         setResizable(false);
-        final JButton sizeMenu = new JButton();
-        /*JMenuItem small = new JMenuItem("Маленькое поле");
-        JMenuItem middle = new JMenuItem("Среднее поле");
-        JMenuItem large = new JMenuItem("Большое поле");
-        sizeMenu.add(small);
-        sizeMenu.addSeparator();
-        sizeMenu.add(middle);
-        sizeMenu.addSeparator();
-        sizeMenu.add(large);*/
         final TimerLabel timeLabel = new TimerLabel();
         timeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         final Panel panel = new Panel();
@@ -46,17 +36,13 @@ public class SapperApplication extends JFrame {
                 int x = e.getX() / 30;
                 int y = e.getY() / 30;
                 if (!bangMine && !youWon) {
-                    if (e.getButton() == MOUSE_BUTTON_LEFT) // left button mouse
+                    if (e.getButton() == MOUSE_BUTTON_LEFT)
                         if (field[y][x].isNotOpen()) {
                             openCells(x, y);
-                            youWon = countOpenedCells == FIELD_SIZE * FIELD_SIZE - NUMBER_OF_MINES; // winning check
-                            if (bangMine) {
-                                bangX = x;
-                                bangY = y;
-                            }
+                            youWon = countOpenedCells == FIELD_SIZE * FIELD_SIZE - NUMBER_OF_MINES;
                         }
-                    if (e.getButton() == MOUSE_BUTTON_RIGHT) field[y][x].inverseFlag(); // right button mouse
-                    if (bangMine || youWon) timeLabel.stopTimer(); // game over
+                    if (e.getButton() == MOUSE_BUTTON_RIGHT) field[y][x].inverseFlag();
+                    if (bangMine || youWon) timeLabel.stopTimer();
                     panel.repaint();
                 }
             }
@@ -67,24 +53,24 @@ public class SapperApplication extends JFrame {
         initField();
     }
 
-    void openCells(int x, int y) { // recursive procedure of opening the cells
-        if (x < 0 || x > FIELD_SIZE - 1 || y < 0 || y > FIELD_SIZE - 1) return; // wrong coordinates
-        if (!field[y][x].isNotOpen()) return; // cell is already open
+    void openCells(int x, int y) {
+        if (x < 0 || x > FIELD_SIZE - 1 || y < 0 || y > FIELD_SIZE - 1) return;
+        if (!field[y][x].isNotOpen()) return;
         field[y][x].open();
         bangMine = field[y][x].isMine();
         if (!field[y][x].isMine()) countOpenedCells++;
-        if (field[y][x].getCountMine() > 0 || bangMine) return; // the cell is not empty
+        if (field[y][x].getCountMine() > 0 || bangMine) return;
         for (int dx = -1; dx < 2; dx++)
             for (int dy = -1; dy < 2; dy++) openCells(x + dx, y + dy);
     }
 
-    void initField() { // initialization of the playing field
+    void initField() {
         int x, y, countMines = 0;
-        // create cells for the field
+
         for (x = 0; x < FIELD_SIZE; x++)
             for (y = 0; y < FIELD_SIZE; y++)
                 field[y][x] = new Cell();
-        // to mine field
+
         while (countMines < NUMBER_OF_MINES) {
             do {
                 x = random.nextInt(FIELD_SIZE);
@@ -93,7 +79,7 @@ public class SapperApplication extends JFrame {
             field[y][x].mine();
             countMines++;
         }
-        // to count dangerous neighbors
+
         for (x = 0; x < FIELD_SIZE; x++) {
             for (y = 0; y < FIELD_SIZE; y++) {
                 if (!field[y][x].isMine()) {

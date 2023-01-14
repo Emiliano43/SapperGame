@@ -2,7 +2,7 @@ package utils;
 
 import java.awt.*;
 
-public class Cell { // playing field cell
+public class Cell {
     private int countMinesNear;
     private boolean isOpen;
     private boolean isMine;
@@ -20,8 +20,6 @@ public class Cell { // playing field cell
 
     public void open() {
         isOpen = true;
-        /*bangMine = isMine;
-        if (!isMine) countOpenedCells++;*/
     }
 
     public void mine() { isMine = true; }

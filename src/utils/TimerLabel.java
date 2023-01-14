@@ -1,6 +1,5 @@
 package utils;
 
-import AppMananger.SapperApplication;
 import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,7 +9,7 @@ public class TimerLabel extends JLabel{
 
     public TimerLabel() {
         timer.scheduleAtFixedRate(timerTask, 0, 1000);
-    } // TimerTask task, long delay, long period
+    }
 
     public TimerTask timerTask = new TimerTask() {
         volatile int time;
